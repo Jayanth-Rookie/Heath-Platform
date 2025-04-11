@@ -247,4 +247,5 @@ function MentalHeathh({ containerHeight = '600px' }) {
     </div>
   );
 }
+export default MentalHealth;
 
