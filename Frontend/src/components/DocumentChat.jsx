@@ -4,13 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
+import { Query, set } from 'mongoose';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 const DocumentChat = () => {
+  const params=useParams();
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const[airesponse, setAiresponse] = useState('');
   
   const [messages, setMessages] = useState([
     {
@@ -57,6 +61,25 @@ const DocumentChat = () => {
       image: selectedImage
     };
 
+    try {
+      const res1 = await axios.post("http://127.0.0.1:8002/generate", null, {
+        params: {
+          prompt: input
+        }
+      });
+      console.log(res1.data);
+      setAiresponse(res1.data);
+    } catch (error) {
+      console.log(error);
+    }
+    
+    try {
+      const res2=await axios.post('https://127.0.0.1:8003/gen',null,{params:{prompt:airesponse}});
+      console.log(res2.data);
+      
+    } catch (error) {
+      console.log(error); 
+    }
     setMessages([...messages, userMessage]);
     setInput('');
     setSelectedImage(null);
