@@ -4,13 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-
+import { Query, set } from 'mongoose';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 const DocumentChat = () => {
+  const params=useParams();
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const[airesponse, setAiresponse] = useState('');
   
   const [messages, setMessages] = useState([
     {
@@ -29,7 +33,24 @@ const DocumentChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage =async () => {
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    try {
+      const res = await axios.post("http://localhost:5000/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res.data);
+      
+      alert("Image uploaded successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed.");
+    }
+
     if (input.trim() === '' && !selectedImage) return;
 
     const userMessage = {
@@ -39,7 +60,36 @@ const DocumentChat = () => {
       timestamp: new Date(),
       image: selectedImage
     };
+    let res1;
+    try {
+      const form = new FormData();
+form.append("prompt", input);
 
+ res1 = await axios.post("http://127.0.0.1:8002/generate", form, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+
+      console.log('Response 1 :',res1.data.response);
+      setAiresponse(res1.data.response);
+    } catch (error) {
+      console.log(error);
+    }
+    
+    try {
+      const form2 = new FormData();
+form2.append("prompt", res1);
+      const res2 = await axios.post("http://127.0.0.1:8003/gen", form2, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });      console.log(res2.data);
+      setAiresponse(res2.data);
+      
+    } catch (error) {
+      console.log(error); 
+    }
     setMessages([...messages, userMessage]);
     setInput('');
     setSelectedImage(null);
@@ -72,7 +122,7 @@ const DocumentChat = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setSelectedImage(e.target.result);
+        setSelectedImage(file);
       };
       reader.readAsDataURL(file);
     }
