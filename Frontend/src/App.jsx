@@ -7,13 +7,15 @@ import Signup from './Pages/Signup.jsx';
 import Login from './Pages/Login.jsx';
 import BookDoctor from "./Pages/BookDoctor.jsx";
 import MentalHealth from './Pages/Mentalhealth.jsx';
+import  Reports  from './Pages/Reports.jsx';
+
 
 
 
 
 
 import './index.css'; 
-import Wrapper from './components/Wrapper.jsx';
+// import Wrapper from './components/Wrapper.jsx';
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/book-doctor" element={<Layout><BookDoctor /></Layout>} />
           <Route path="/mental-health" element={<Layout><MentalHealth /></Layout>} />
+          <Route path="/reports" element={<Layout><Reports /></Layout>} />
+
 
 
 
