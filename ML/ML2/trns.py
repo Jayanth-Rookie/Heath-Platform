@@ -2,12 +2,22 @@ from openai import OpenAI
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile, Form
 from dotenv import load_dotenv
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app2= FastAPI()
+
 load_dotenv()
+app2.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app2.post("/gen")
 # Create a client with your API key and custom base URL
-def genarate(prompt:str):
+def genarate(prompt: str = Form(...)):
     client = OpenAI(
         api_key="sk-EDj0Uv3wYofgD5GBvQSgmGU8sRYShIiK3PpZU76jESQp1FvE",
         base_url="https://api.chatanywhere.tech/v1"

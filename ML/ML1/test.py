@@ -3,11 +3,12 @@ import ollama
 import os
 import base64
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 
 load_dotenv()
 
-flag = False
+
 
 print(os.listdir("C:/Users/bhuva/OneDrive/Desktop/projects/64.Neural_Knights/Uploads/image"))
 image_id = os.listdir("C:/Users/bhuva/OneDrive/Desktop/projects/64.Neural_Knights/Uploads/image")
@@ -15,12 +16,17 @@ image_path = f"C:/Users/bhuva/OneDrive/Desktop/projects/64.Neural_Knights/Upload
 
 print(image_path)
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.post("/generate")
 async def generate(prompt: str = Form(...)):
     # Read the uploaded image file
     
-    flag = True
     # Encode the image to base64
    
     response = ollama.chat(

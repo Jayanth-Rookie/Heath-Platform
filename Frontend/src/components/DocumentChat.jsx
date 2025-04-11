@@ -60,22 +60,31 @@ const DocumentChat = () => {
       timestamp: new Date(),
       image: selectedImage
     };
-
+    let res1;
     try {
-      const res1 = await axios.post("http://127.0.0.1:8002/generate", null, {
-        params: {
-          prompt: input
-        }
-      });
-      console.log(res1.data);
-      setAiresponse(res1.data);
+      const form = new FormData();
+form.append("prompt", input);
+
+ res1 = await axios.post("http://127.0.0.1:8002/generate", form, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+
+      console.log('Response 1 :',res1.data.response);
+      setAiresponse(res1.data.response);
     } catch (error) {
       console.log(error);
     }
     
     try {
-      const res2=await axios.post('https://127.0.0.1:8003/gen',null,{params:{prompt:airesponse}});
-      console.log(res2.data);
+      const form2 = new FormData();
+form2.append("prompt", res1);
+      const res2 = await axios.post("http://127.0.0.1:8003/gen", form2, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });      console.log(res2.data);
       
     } catch (error) {
       console.log(error); 
