@@ -9,11 +9,14 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
+  const {user}=useSelector((state)=>state.user)
   const location = useLocation();
   // Mock user data instead of using auth
-  const user = { name: 'Choco Boy', role: 'Patient' };
+  // const user = { name: 'Choco Boy', role: 'Patient' };
+  const username=user?.username || 'user';
   
   const menuItems = [
     { path: "/", label: "Home", icon: <Home size={20} /> },
@@ -29,9 +32,9 @@ const Sidebar = () => {
       <div className="p-5 border-b border-gray-100">
         <Link to="/" className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-medguard-500 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">M</span>
+            <span className="text-white font-bold text-lg">V</span>
           </div>
-          <span className="text-xl font-bold">Medguard</span>
+          <span className="text-xl font-bold">Vertex.ai</span>
         </Link>
       </div>
       
@@ -39,11 +42,11 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full bg-medguard-200 flex items-center justify-center">
             <span className="text-medguard-700 font-semibold">
-              {user?.name?.split(' ').map(n => n[0]).join('') || 'JD'}
+              {user?.username?.split(' ').map(n => n[0]).join('') || 'JD'}
             </span>
           </div>
           <div>
-            <p className="text-sm font-medium">{user?.name || 'John Doe'}</p>
+            <p className="text-sm font-medium">{user?.username || 'John Doe'}</p>
             <p className="text-xs text-gray-500">{user?.role || 'Patient'}</p>
           </div>
         </div>
