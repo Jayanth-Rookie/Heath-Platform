@@ -69,7 +69,7 @@ const MentalHealth = () => {
       {/* Floating cherry blossoms/lotus elements */}
       <div id="particles" className="fixed inset-0 pointer-events-none z-0"></div>
       
-      <Navbar />
+      {/* <Navbar /> */}
       
       <main className="relative flex-grow py-8 z-10">
         <div className="container mx-auto px-4">
