@@ -248,4 +248,3 @@ function MentalHeathh({ containerHeight = '600px' }) {
   );
 }
 
-export default MentalHeathh;
