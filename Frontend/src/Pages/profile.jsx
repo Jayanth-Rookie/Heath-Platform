@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { User, Settings, LogOut, Mail, Edit, Camera } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 export default function ProfilePage() {
+  const {user}=useSelector((state)=>state.user);
   // Simulating the data that would be passed from your authentication flow
   const [userData, setUserData] = useState({
-    email: "user@example.com",
-    username: "John Doe",
+    email: user.email,
+    username: user.username,
     joinDate: new Date().toLocaleDateString(),
     profileImage: null
   });

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-
+import axios from 'axios';
 const DocumentChat = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -29,7 +29,24 @@ const DocumentChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage =async () => {
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    try {
+      const res = await axios.post("http://localhost:5000/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res.data);
+      
+      alert("Image uploaded successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed.");
+    }
+
     if (input.trim() === '' && !selectedImage) return;
 
     const userMessage = {
@@ -72,7 +89,7 @@ const DocumentChat = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setSelectedImage(e.target.result);
+        setSelectedImage(file);
       };
       reader.readAsDataURL(file);
     }
