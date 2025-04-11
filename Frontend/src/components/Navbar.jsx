@@ -1,9 +1,11 @@
 import { Bell, Search, Video } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
-  const user = { name: 'Choco Boy' };
+  // const user = { name: 'Choco Boy' };
+  const {user}=useSelector((state)=>state.user);
   
   return (
     <nav className="bg-white py-4 px-6 border-b flex justify-between items-center">
@@ -35,11 +37,11 @@ const Navbar = () => {
         <Link to="/profile" className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full bg-medguard-200 flex items-center justify-center">
             <span className="text-medguard-700 font-semibold">
-              {user?.name?.split(' ').map(n => n[0]).join('') || 'JD'}
+              {user?.username?.split(' ').map(n => n[0]).join('') || 'JD'}
             </span>
           </div>
           <div className="hidden md:block">
-            <div className="text-sm font-medium">{user?.name || 'John Doe'}</div>
+            <div className="text-sm font-medium">{user?.username || 'John Doe'}</div>
             <div className="text-xs text-gray-500">Patient</div>
           </div>
         </Link>

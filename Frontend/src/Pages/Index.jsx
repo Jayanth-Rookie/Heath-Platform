@@ -76,6 +76,7 @@ const Index = () => {
   },[location])
   useEffect(()=>{
     console.log('Current User : ',user);
+    console.log('Current User : ',user.username);
   },[])
 
   return (
