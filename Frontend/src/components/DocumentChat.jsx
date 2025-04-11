@@ -4,18 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { Query, set } from 'mongoose';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+
 const DocumentChat = () => {
-  const params=useParams();
+  const params = useParams();
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageDisplay, setSelectedImageDisplay] = useState(null); // For preview
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  const[airesponse, setAiresponse] = useState('');
-  
+
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -33,82 +33,104 @@ const DocumentChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSendMessage =async () => {
-    const formData = new FormData();
-    formData.append("image", selectedImage);
-
-    try {
-      const res = await axios.post("http://localhost:5000/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(res.data);
-      
-      alert("Image uploaded successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed.");
-    }
-
+  const handleSendMessage = async () => {
     if (input.trim() === '' && !selectedImage) return;
 
+    // Create user message
     const userMessage = {
       id: messages.length + 1,
       text: input,
       sender: 'user',
       timestamp: new Date(),
-      image: selectedImage
+      image: selectedImageDisplay
     };
-    let res1;
+
+    // Append user message to the chat
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+    // Clear input and reset image selection
+    setInput('');
+    setIsTyping(true);
+
     try {
+      let imageUploadResponse = null;
+      
+      // Upload image if selected
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append("image", selectedImage);
+
+        try {
+          const res = await axios.post("http://localhost:5000/upload", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          console.log("Image upload response:", res.data);
+          imageUploadResponse = res.data;
+          // Don't alert in production code
+          // alert("Image uploaded successfully!");
+        } catch (imageError) {
+          console.error("Image upload failed:", imageError);
+        }
+      }
+
+      // Send user input to the first backend endpoint
       const form = new FormData();
-form.append("prompt", input);
+      form.append("prompt", input);
+      
+      // Add image reference if available
+      if (imageUploadResponse && imageUploadResponse.imageUrl) {
+        form.append("imageUrl", imageUploadResponse.imageUrl);
+      }
 
- res1 = await axios.post("http://127.0.0.1:8002/generate", form, {
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+      const res1 = await axios.post("http://127.0.0.1:8002/generate", form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      console.log('Response 1 :',res1.data.response);
-      setAiresponse(res1.data.response);
-    } catch (error) {
-      console.log(error);
-    }
-    
-    try {
+      console.log('Response 1:', res1.data.response);
+
+      // Send the first response to the second backend endpoint
       const form2 = new FormData();
-form2.append("prompt", res1);
+      form2.append("prompt", res1.data.response || input);
+
       const res2 = await axios.post("http://127.0.0.1:8003/gen", form2, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });      console.log(res2.data);
-      setAiresponse(res2.data);
-      
-    } catch (error) {
-      console.log(error); 
-    }
-    setMessages([...messages, userMessage]);
-    setInput('');
-    setSelectedImage(null);
-    setIsTyping(true);
+      });
 
-    // Simulate bot response after a delay
-    setTimeout(() => {
+      console.log('Response 2:', res2.data);
+
+      // Create bot response message
       const botResponse = {
         id: messages.length + 2,
-        text: selectedImage 
-          ? "I received your image! What would you like to know about it?" 
-          : "Thanks for your message. How else can I help you?",
+        text: res2.data?.response || res2.data || "I received your message! How else can I help you?",
         sender: 'bot',
         timestamp: new Date()
       };
 
-      setIsTyping(false);
-      setMessages(prevMessages => [...prevMessages, botResponse]);
-    }, 1000);
+      // Append bot response to the chat
+      setMessages((prevMessages) => [...prevMessages, botResponse]);
+    } catch (error) {
+      console.error("Error in message processing:", error);
+
+      // Handle error response from the bot
+      const errorMessage = {
+        id: messages.length + 2,
+        text: `Sorry, I encountered an error while processing your request: ${error.message || "Unknown error"}`,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    } finally {
+      setIsTyping(false); // Stop typing indicator
+      setSelectedImage(null);
+      setSelectedImageDisplay(null);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -122,7 +144,8 @@ form2.append("prompt", res1);
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setSelectedImage(file);
+        setSelectedImage(file); // Store the actual file for upload
+        setSelectedImageDisplay(e.target.result); // Store the data URL for display
       };
       reader.readAsDataURL(file);
     }
@@ -134,6 +157,7 @@ form2.append("prompt", res1);
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
+    setSelectedImageDisplay(null);
   };
 
   return (
@@ -182,14 +206,14 @@ form2.append("prompt", res1);
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
-              
+
               {message.text && <p className="mb-2">{message.text}</p>}
-              
+
               {message.image && (
                 <div className="mt-2">
-                  <img 
-                    src={message.image} 
-                    alt="Uploaded by user" 
+                  <img
+                    src={message.image}
+                    alt="Uploaded by user"
                     className="max-w-full rounded-lg"
                     style={{ maxHeight: '200px' }}
                   />
@@ -198,7 +222,7 @@ form2.append("prompt", res1);
             </div>
           </div>
         ))}
-        
+
         {isTyping && (
           <div className="flex justify-start">
             <div className="bg-white border border-gray-200 rounded-xl rounded-tl-none p-3 shadow-sm max-w-[85%]">
@@ -215,23 +239,23 @@ form2.append("prompt", res1);
             </div>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
       {/* Image Preview (if selected) */}
-      {selectedImage && (
+      {selectedImageDisplay && (
         <div className="px-4 py-2 border-t bg-medguard-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="relative w-12 h-12 overflow-hidden rounded-md border border-medguard-200">
-                <img src={selectedImage} alt="Preview" className="w-full h-full object-cover" />
+                <img src={selectedImageDisplay} alt="Preview" className="w-full h-full object-cover" />
               </div>
               <span className="text-sm text-gray-600">Image ready to send</span>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               className="text-red-500 hover:bg-red-50"
               onClick={removeSelectedImage}
             >
@@ -244,8 +268,8 @@ form2.append("prompt", res1);
       {/* Input Area */}
       <div className="border-t p-3 bg-white">
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={triggerImageUpload}
             className="text-medguard-600 border-medguard-200 hover:bg-medguard-50"
           >
@@ -265,8 +289,8 @@ form2.append("prompt", res1);
             placeholder="Type a message..."
             className="flex-1 border-medguard-200 focus-visible:ring-medguard-500"
           />
-          <Button 
-            onClick={handleSendMessage} 
+          <Button
+            onClick={handleSendMessage}
             className="bg-medguard-500 hover:bg-medguard-600 transition-colors"
             disabled={input.trim() === '' && !selectedImage}
           >
@@ -282,3 +306,6 @@ form2.append("prompt", res1);
 };
 
 export default DocumentChat;
+
+
+

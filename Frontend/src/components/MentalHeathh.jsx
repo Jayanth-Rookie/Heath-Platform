@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-
+import axios from 'axios';
 function MentalHeathh({ containerHeight = '600px' }) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
@@ -7,15 +7,19 @@ function MentalHeathh({ containerHeight = '600px' }) {
   const [darkMode, setDarkMode] = useState(true); // Dark mode default
   const abortControllerRef = useRef(null);
   const chatEndRef = useRef(null);
+  const [flag,setFlag]=useState(false);
+  const [senti,setSentiment]=useState('');
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const stopStreaming = () => {
+  const stopStreaming =async () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
+      console.log(messages);
+      
       setLoading(false);
     }
   };
@@ -65,6 +69,7 @@ function MentalHeathh({ containerHeight = '600px' }) {
           }
         }
       }
+     
     } catch (err) {
       if (err.name !== 'AbortError') {
         console.error('Streaming error:', err);
@@ -75,8 +80,35 @@ function MentalHeathh({ containerHeight = '600px' }) {
       }
     } finally {
       setLoading(false);
+      setFlag(true);
     }
   };
+  
+  const sentiment=async()=>{
+    try {
+      console.log("messages:",messages);
+      
+      const form = new FormData();
+      form.append("prompt", messages);
+      const res=await axios.post('http://127.0.0.1:8004/sum', form, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      console.log(res);
+      setSentiment(res.data);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+    useEffect(()=>{
+      if(flag){
+       sentiment();
+    }},[flag])
+    
+
+  
 
   return (
     <div className={`flex flex-col w-full rounded-lg overflow-hidden ${
