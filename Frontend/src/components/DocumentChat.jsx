@@ -85,6 +85,7 @@ form2.append("prompt", res1);
           "Content-Type": "multipart/form-data",
         },
       });      console.log(res2.data);
+      setAiresponse(res2.data);
       
     } catch (error) {
       console.log(error); 
