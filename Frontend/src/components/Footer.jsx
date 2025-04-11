@@ -11,7 +11,7 @@ const Footer = () => {
               <div className="h-8 w-8 rounded-full bg-medguard-500 flex items-center justify-center">
                 <span className="text-white font-bold">M</span>
               </div>
-              <span className="text-xl font-bold">Medguard</span>
+              <span className="text-xl font-bold">Vertex.ai</span>
             </div>
             <p className="text-gray-600 mb-4">
               Your trusted healthcare companion. We provide personalized care to empower your healthcare journey.
@@ -70,7 +70,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-medguard-500" />
-                <span className="text-gray-600">contact@medguard.com</span>
+                <span className="text-gray-600">contact@vertex.ai.com</span>
               </li>
             </ul>
           </div>
@@ -78,7 +78,7 @@ const Footer = () => {
 
         <div className="border-t mt-10 pt-6">
           <p className="text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} Medguard. All rights reserved.
+            © {new Date().getFullYear()} Vertex. All rights reserved.
           </p>
         </div>
       </div>

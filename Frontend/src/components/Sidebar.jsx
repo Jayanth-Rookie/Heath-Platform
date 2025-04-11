@@ -31,7 +31,7 @@ const Sidebar = () => {
           <div className="h-10 w-10 rounded-full bg-medguard-500 flex items-center justify-center">
             <span className="text-white font-bold text-lg">M</span>
           </div>
-          <span className="text-xl font-bold">Medguard</span>
+          <span className="text-xl font-bold">Vertex.ai</span>
         </Link>
       </div>
       

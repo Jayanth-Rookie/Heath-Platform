@@ -88,7 +88,7 @@ const Index = () => {
         <Button asChild className="bg-medguard-500 hover:bg-medguard-600">
           <Link to="/book-doctor"
             state={{ location }}
-          >Book a Doctor</Link>
+          >Find Doctors</Link>
         </Button>
       </div>
 

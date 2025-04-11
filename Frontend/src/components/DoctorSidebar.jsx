@@ -19,7 +19,7 @@ const DoctorSidebar = () => {
   const menuItems = [
     { path: "/doctor", label: "Dashboard", icon: <Home size={20} /> },
     { path: "/doctor-appointment", label: "Appointments", icon: <Calendar size={20} /> },
-    { path: "/doctor/patients", label: "Patients", icon: <Users size={20} /> },
+    // { path: "/doctor/patients", label: "Patients", icon: <Users size={20} /> },
     { path: "/doctor/profile", label: "My Profile", icon: <User size={20} /> },
   ];
 

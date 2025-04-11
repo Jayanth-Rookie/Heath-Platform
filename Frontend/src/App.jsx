@@ -13,6 +13,8 @@ import DoctorLayout from "./components/DoctorLayout";
 import DoctorDashboard from './Pages/DoctorDashboard.jsx';
 import DoctorSignup from './Pages/DoctorSignup.jsx';
 import MentalHealth from './Pages/Mentalhealth.jsx';
+import ProfilePage from './Pages/profile.jsx';
+import DoctorProfile from './Pages/DoctorProfile.jsx';
 
 
 import './index.css'; 
@@ -38,6 +40,8 @@ function App() {
           <Route path="/book-doctor" element={<Layout><BookDoctor /></Layout>} />
           <Route path="/reports" element={<Layout><Reports /></Layout>} />
           <Route path="/mental-health" element={<Layout><MentalHealth /></Layout>} />
+          <Route path="/profile" element={<Layout><ProfilePage/></Layout>} />
+          <Route path="/doctor-profile" element={<DoctorLayout><DoctorProfile/></DoctorLayout>} />
 
           <Route path="/doctor" element={<DoctorLayout><DoctorDashboard /></DoctorLayout>} />
         </Routes>
