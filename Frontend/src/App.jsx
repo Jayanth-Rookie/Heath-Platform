@@ -6,6 +6,8 @@ import Index from "./Pages/Index.jsx";
 import Signup from './Pages/Signup.jsx';
 import Login from './Pages/Login.jsx';
 import BookDoctor from "./Pages/BookDoctor.jsx";
+import MentalHealth from './Pages/Mentalhealth.jsx';
+
 
 
 
@@ -23,6 +25,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/book-doctor" element={<Layout><BookDoctor /></Layout>} />
+          <Route path="/mental-health" element={<Layout><MentalHealth /></Layout>} />
+
 
 
 
