@@ -9,7 +9,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="h-8 w-8 rounded-full bg-medguard-500 flex items-center justify-center">
-                <span className="text-white font-bold">M</span>
+                <span className="text-white font-bold">V</span>
               </div>
               <span className="text-xl font-bold">Vertex.ai</span>
             </div>

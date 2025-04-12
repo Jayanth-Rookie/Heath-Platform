@@ -500,13 +500,13 @@ const DocumentChat = () => {
               <p className="text-sm opacity-90">Upload images and chat</p>
             </div>
           </div>
-          <Button 
+          {/* <Button 
             onClick={handlePrint}
             className="bg-white text-medguard-600 hover:bg-medguard-50 flex items-center gap-2"
           >
             <Printer size={16} />
             <span>Print</span>
-          </Button>
+          </Button> */}
         </div>
       </div>
 
