@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Heart, Sparkles } from "lucide-react";
 import MentalHeathh from "../components/MentalHeathh";
+import MoodBooster from "@/components/MoodBooster.jsx";
+
 
 const MentalHealth = () => {
   const [showResources, setShowResources] = useState(true);
@@ -82,7 +84,7 @@ const MentalHealth = () => {
             </div>
             
             <div className="flex gap-3">
-              <Button
+              {/* <Button
                 variant="outline"
                 className="border-indigo-200 text-indigo-700 hover:bg-indigo-50"
                 onClick={() => setShowResources(!showResources)}
@@ -90,9 +92,9 @@ const MentalHealth = () => {
                 {showResources ? "Hide Resources" : "Show Resources"}
               </Button>
               
-              <Button className="bg-rose-500 hover:bg-rose-600 text-white">
-                Emergency Support
-              </Button>
+              <Button className="bg-rose-500 hover:bg-rose-600 text-white"> */}
+                {/* Emergency Support
+              </Button> */}
             </div>
           </div>
           
@@ -102,62 +104,8 @@ const MentalHealth = () => {
                 < MentalHeathh/>
               </div>
             </div>
-            
-            {showResources && (
-              <div className="space-y-6">
-                <div className="bg-white/40 backdrop-blur-sm rounded-xl shadow-sm overflow-hidden border border-white/30">
-                  <div className="bg-indigo-500/80 text-white p-4">
-                    <h2 className="font-semibold text-lg flex items-center gap-2">
-                      <Sparkles size={18} /> Mindfulness Resources
-                    </h2>
-                  </div>
-                  <div className="p-4">
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="font-medium mb-1 text-indigo-900">Crisis Support</h3>
-                        <p className="text-sm text-indigo-700">
-                          If you're experiencing a mental health crisis, call the National Suicide Prevention Lifeline: 
-                          <span className="font-semibold block">988 or 1-800-273-8255</span>
-                        </p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-medium mb-1 text-indigo-900">Grounding Technique</h3>
-                        <p className="text-sm text-indigo-700">
-                          Try the 5-4-3-2-1 method: Name 5 things you see, 4 things you feel, 3 things you hear, 2 things you smell, and 1 thing you taste.
-                        </p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-medium mb-1 text-indigo-900">Breathing Exercise</h3>
-                        <p className="text-sm text-indigo-700">
-                          Practice "box breathing": Inhale (4 counts), hold (4 counts), exhale (4 counts), hold (4 counts). Repeat for 2 minutes.
-                        </p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-medium mb-1 text-indigo-900">Positive Affirmation</h3>
-                        <p className="text-sm text-indigo-700">
-                          "I am doing the best I can with what I have right now, and that is enough."
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-white/40 backdrop-blur-sm rounded-xl shadow-sm overflow-hidden border border-white/30">
-                  <div className="p-5">
-                    <h2 className="flex font-semibold text-lg mb-3 text-indigo-900">Professional Support</h2>
-                    <p className="text-sm text-indigo-700 mb-4">
-                      While our AI assistant can provide support, sometimes it's best to speak with a mental health professional.
-                    </p>
-                    <Button className=" flex w-full bg-indigo-500 hover:bg-indigo-600 text-white">
-                      Find a Therapist <ExternalLink size={16} className="ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
+            <MoodBooster />
+           
           </div>
         </div>
       </main>
