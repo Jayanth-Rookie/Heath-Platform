@@ -1,25 +1,29 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-function MentalHeathh({ containerHeight = '600px' }) {
+
+function MentalHeathh({ containerHeight = '600px', onSentimentAnalyzed }) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [darkMode, setDarkMode] = useState(true); // Dark mode default
+  const [darkMode, setDarkMode] = useState(true);
   const abortControllerRef = useRef(null);
   const chatEndRef = useRef(null);
-  const [flag,setFlag]=useState(false);
-  const [senti,setSentiment]=useState('');
+  const [flag, setFlag] = useState(false);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const stopStreaming =async () => {
+  useEffect(() => {
+    if (flag) {
+      sentiment();
+    }
+  }, [flag]);
+
+  const stopStreaming = async () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
-      console.log(messages);
-      
       setLoading(false);
     }
   };
@@ -69,7 +73,6 @@ function MentalHeathh({ containerHeight = '600px' }) {
           }
         }
       }
-     
     } catch (err) {
       if (err.name !== 'AbortError') {
         console.error('Streaming error:', err);
@@ -83,32 +86,33 @@ function MentalHeathh({ containerHeight = '600px' }) {
       setFlag(true);
     }
   };
-  
-  const sentiment=async()=>{
+
+  const sentiment = async () => {
     try {
-      console.log("messages:",messages);
-      
+      const conversationText = messages.map(msg => msg.content).join('\n');
+      console.log("Conversation Text:", conversationText);
+
       const form = new FormData();
-      form.append("prompt", messages);
-      const res=await axios.post('http://127.0.0.1:8004/sum', form, {
+      form.append("prompt", conversationText);
+
+      const res = await axios.post('http://127.0.0.1:8004/sum', form, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
-      })
-      console.log(res);
-      setSentiment(res.data);
-    } catch (error) {
-      console.log(error);
-      
-    }
-  }
-    useEffect(()=>{
-      if(flag){
-       sentiment();
-    }},[flag])
-    
+      });
 
-  
+      console.log("Sentiment Analysis Response:", res.data);
+
+      if (res.data && res.data.keywords) {
+        // Pass keywords to parent component
+        onSentimentAnalyzed(res.data.keywords.join(", ")); // Convert array to string
+      } else {
+        console.error("Unexpected response format:", res.data);
+      }
+    } catch (error) {
+      console.error("Sentiment analysis failed:", error);
+    }
+  };
 
   return (
     <div className={`flex flex-col w-full rounded-lg overflow-hidden ${
@@ -247,5 +251,5 @@ function MentalHeathh({ containerHeight = '600px' }) {
     </div>
   );
 }
-export default MentalHeathh;
 
+export default MentalHeathh;

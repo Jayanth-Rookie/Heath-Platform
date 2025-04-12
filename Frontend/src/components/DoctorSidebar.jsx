@@ -7,6 +7,8 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import GoogleTranslateButton from './GoogleTranslateButton';
+
 
 const DoctorSidebar = () => {
   const location = useLocation();
@@ -38,7 +40,8 @@ const DoctorSidebar = () => {
           <span className="text-xl font-bold">Medguard</span>
         </Link>
       </div>
-      
+      <GoogleTranslateButton />
+
       <div className="p-5 border-b border-gray-100">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full bg-medguard-200 flex items-center justify-center">
