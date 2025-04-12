@@ -6,6 +6,7 @@ import {setmood} from '../Redux/features/moodslice';
 import { set } from 'mongoose';
 
 function MentalHeathh({ containerHeight = '600px', onSentimentAnalyzed }) {
+  const {user}=useSelector(state=>state.user);
   const dispatch=useDispatch();
   const {mood}=useSelector(state=>state.mood);
   const [input, setInput] = useState('');
@@ -110,10 +111,37 @@ function MentalHeathh({ containerHeight = '600px', onSentimentAnalyzed }) {
 
       console.log("Sentiment Analysis Response:", res.data);
       setSentiment(res.data);
+      if(res.data==="verylow") sendemail();
+      // {
+      //   const respond=await axios.post('http://localhost:6000/send-email', 
+      //     {
+      //       "to": "bhuvan.ravi075@gmail.com",
+      //       "subject": "Test Email from Express",
+      //       "text": "This is a test email sent from an Express API using Nodemailer."
+      //     },
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     }
+      //   }).then(res => console.log(res));
+      // }
       dispatch(setmood(res.data));
 
     } catch (error) {
       console.error("Sentiment analysis failed:", error);
+    }
+  };
+
+  const sendemail = async () => {
+    try {
+      const res = await axios.post('http://localhost:8080/send-email', {
+        to: 'bhuvan.ravi075@gmail.com',
+        subject: 'from Vertex.ai',
+        text: `${user.username} is feeling very low . Please console him`,
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.error('Email send failed:', err.message);
     }
   };
 
