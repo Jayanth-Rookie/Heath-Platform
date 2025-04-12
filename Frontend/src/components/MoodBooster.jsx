@@ -142,52 +142,43 @@
 // export default MoodBooster;
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import MusicPlayer from './MusicPlayer';
 import { analyzeSentiment } from '@/services/sentimentService';
 import { getRandomSongForMood } from '@/data/songs';
-import { cn } from '@/lib/utils';
+import { useSelector } from 'react-redux';
 
-const MoodBooster = ({ keywords }) => {
-  const [mood, setMood] = useState(null);
+const MoodBooster = () => {
+  const { mood } = useSelector((state) => state.mood); // e.g., 'very-low', 'low', 'neutral', 'positive'
   const [song, setSong] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    if (keywords) {
-      handleAnalyze();
+    if (mood) {
+      handleAnalyze(mood);
     }
-  }, [keywords]);
+  }, [mood]); // 🔁 Trigger on mood change
 
-  const getMoodGradient = (currentMood) => {
-    switch (currentMood) {
-      case 'very-low':
-        return 'from-mood-very-low to-mood-low';
-      case 'low':
-        return 'from-mood-low to-mood-neutral';
-      case 'neutral':
-        return 'from-mood-neutral to-mood-positive';
-      case 'positive':
-        return 'from-mood-positive to-mood-neutral';
-      default:
-        return 'from-blue-50 to-indigo-100';
+  const handleAnalyze = (currentMood) => {
+    console.log('Analyzing mood...', currentMood);
+    const recommendedSong = getRandomSongForMood(currentMood);
+
+    if (!recommendedSong) {
+      toast({
+        title: "Mood not recognized",
+        description: "We couldn't find songs for this mood.",
+        variant: "destructive"
+      });
+      return;
     }
-  };
 
-  const handleAnalyze = () => {
-    if (!keywords.trim()) return;
-
-    const result = analyzeSentiment(keywords);
-    setMood(result.mood);
-
-    // Get a song recommendation
-    const recommendedSong = getRandomSongForMood(result.mood);
     setSong(recommendedSong);
+    console.log('Analyzing completed...');
 
     toast({
       title: "Analysis complete",
-      description: getMoodMessage(result.mood),
+      description: getMoodMessage(currentMood),
     });
   };
 

@@ -16,6 +16,7 @@ image_path = f"C:/Users/bhuva/OneDrive/Desktop/projects/64.Neural_Knights/Upload
 
 print(image_path)
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # your frontend URL
@@ -23,6 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.post("/generate")
 async def generate(prompt: str = Form(...)):
     # Read the uploaded image file
@@ -34,7 +36,7 @@ async def generate(prompt: str = Form(...)):
         messages=[
             {
                 'role': 'user',
-                'content': prompt,
+                'content': "Please summrize this image in detail without leaving anything ",
                 'images': [image_path],
             }
         ]

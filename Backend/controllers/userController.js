@@ -37,8 +37,11 @@ const getUsers = async (req, res) => {
 const loginuser=async(req,res)=>{
   try {
     const { email, password } = req.body;
+    console.log(email,password);
     const user= await User.findOne({email});
     if(!user){
+      console.log('User not found');
+      
       res.status(404).json({error:"user not found"});
     }
     const isMatch = await user.comparePassword(password);

@@ -406,9 +406,9 @@ const DocumentChat = () => {
       form.append("prompt", input);
       
       // Add image reference if available
-      if (imageUploadResponse && imageUploadResponse.imageUrl) {
-        form.append("imageUrl", imageUploadResponse.imageUrl);
-      }
+      // if (imageUploadResponse && imageUploadResponse.imageUrl) {
+      //   form.append("imageUrl", imageUploadResponse.imageUrl);
+      // }
 
       const res1 = await axios.post("http://127.0.0.1:8002/generate", form, {
         headers: {
@@ -631,6 +631,7 @@ const DocumentChat = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
+            required={true}
             className="flex-1 border-medguard-200 focus-visible:ring-medguard-500"
           />
           <Button

@@ -7,12 +7,14 @@ import {doctorSlice} from './features/doctorslice'
 
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import { moodslice } from './features/moodslice';
 
 const rootReducer = combineReducers({
   alert: alertslice.reducer,
   location: locationSlice.reducer,
   user: userSlice.reducer,
-  doctor:doctorSlice.reducer
+  doctor:doctorSlice.reducer,
+  mood:moodslice.reducer
 });
 
 const persistConfig = {

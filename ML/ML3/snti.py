@@ -27,7 +27,7 @@ def genarate(prompt: str = Form(...)):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",  # or "gpt-4" if supported
         messages=[
-            {"role": "system", "content": "You are an sniment analyser. Based on the following conversation description, provide  the users state of mind. tell the sentiment is one word "},
+            {"role": "system", "content": "You are an sniment analyser. Based on the following conversation description, provide  the users state of mind. tell the sentiment is one word in the following 4  sentiments low , verylow , neutral,positive  in single word"},
             {"role": "user", "content": prompt}
         ]
     )

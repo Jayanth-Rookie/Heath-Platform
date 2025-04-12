@@ -1,7 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+// import { stat } from 'fs';
+import { useSelector ,useDispatch} from 'react-redux';
+import {setmood} from '../Redux/features/moodslice';
+import { set } from 'mongoose';
 
 function MentalHeathh({ containerHeight = '600px', onSentimentAnalyzed }) {
+  const dispatch=useDispatch();
+  const {mood}=useSelector(state=>state.mood);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -9,6 +15,7 @@ function MentalHeathh({ containerHeight = '600px', onSentimentAnalyzed }) {
   const abortControllerRef = useRef(null);
   const chatEndRef = useRef(null);
   const [flag, setFlag] = useState(false);
+  const [sent,setSentiment]=useState("");
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -102,13 +109,9 @@ function MentalHeathh({ containerHeight = '600px', onSentimentAnalyzed }) {
       });
 
       console.log("Sentiment Analysis Response:", res.data);
+      setSentiment(res.data);
+      dispatch(setmood(res.data));
 
-      if (res.data && res.data.keywords) {
-        // Pass keywords to parent component
-        onSentimentAnalyzed(res.data.keywords.join(", ")); // Convert array to string
-      } else {
-        console.error("Unexpected response format:", res.data);
-      }
     } catch (error) {
       console.error("Sentiment analysis failed:", error);
     }

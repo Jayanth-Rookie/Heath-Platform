@@ -9,14 +9,14 @@ export interface Song {
 }
 
 export interface SongDatabase {
-  'very-low': Song[];
+  'verylow': Song[];
   'low': Song[];
   'neutral': Song[];
   'positive': Song[];
 }
 
 export const songs: SongDatabase = {
-  'very-low': [
+  'verylow': [
     {
       title: "Lovely Day",
       artist: "Bill Withers",
@@ -122,8 +122,13 @@ export const songs: SongDatabase = {
   ]
 };
 
-export function getRandomSongForMood(mood: keyof SongDatabase): Song {
+export function getRandomSongForMood(mood: keyof SongDatabase): Song | null {
+  if (!mood || !songs[mood]) {
+    console.warn(`Invalid mood: '${mood}' passed to getRandomSongForMood`);
+    return null;
+  }
   const moodSongs = songs[mood];
   const randomIndex = Math.floor(Math.random() * moodSongs.length);
   return moodSongs[randomIndex];
 }
+

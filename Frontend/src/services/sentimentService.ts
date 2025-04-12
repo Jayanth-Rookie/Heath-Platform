@@ -1,7 +1,7 @@
 
 // A simple sentiment analysis service
 
-export type Mood = 'very-low' | 'low' | 'neutral' | 'positive';
+export type Mood = 'verylow' | 'low' | 'neutral' | 'positive';
 
 export interface SentimentResult {
   score: number;
@@ -47,7 +47,7 @@ export function analyzeSentiment(text: string): SentimentResult {
   // Determine mood
   let mood: Mood;
   if (score < -2) {
-    mood = 'very-low';
+    mood = 'verylow';
   } else if (score < 0) {
     mood = 'low';
   } else if (score === 0) {
