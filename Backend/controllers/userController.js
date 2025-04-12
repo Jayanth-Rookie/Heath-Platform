@@ -68,7 +68,7 @@ const getdoctor=async(req,res)=>{
     const doctors=await Doctor.find({
       location: {
         $geoWithin: {
-            $centerSphere: [[Location.ltd,Location.lng], 5 / 6371]
+            $centerSphere: [[Location.ltd,Location.lng], 500 / 6371]
         }
     }
     });
