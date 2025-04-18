@@ -19,7 +19,7 @@ app3.add_middleware(
 # Create a client with your API key and custom base URL
 def genarate(prompt: str = Form(...)):
     client = OpenAI(
-        api_key="sk-EDj0Uv3wYofgD5GBvQSgmGU8sRYShIiK3PpZU76jESQp1FvE",
+        api_key="",
         base_url="https://api.chatanywhere.tech/v1"
     )
 
